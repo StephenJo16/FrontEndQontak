@@ -8,6 +8,8 @@ class CustomerQontak extends Model
 {
     protected $table = 'tbcustomer_qontak'; 
     protected $primaryKey = 'ccustcode'; 
+    public $incrementing = false; 
+    protected $keyType = 'string'; 
     protected $fillable = [
         'ccustcode',
         'ccustname',

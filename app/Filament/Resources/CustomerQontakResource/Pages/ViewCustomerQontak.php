@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Filament\Resources\CustomerQontakResource\Pages;
-
+use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\CustomerQontakResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Infolist;
+use Filament\Forms\Form;
 
 class ViewCustomerQontak extends ViewRecord
 {
@@ -16,57 +17,84 @@ class ViewCustomerQontak extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+        
         ];
     }
 
-    public function Infolist(Infolist $infolist): Infolist
+    public function form(Form $form): Form
     {
-        return $infolist
+        return $form
             ->schema([
                 Grid::make(2)->schema([
-                    TextEntry::make('ccustcode')
-                        ->label('Customer Code'),
+                    TextInput::make('ccustcode')
+                        ->label('Customer Code')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccustname')
-                        ->label('Customer Name'),
+                    TextInput::make('ccustname')
+                        ->label('Customer Name')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('custaddress')
+                    TextInput::make('custaddress')
                         ->label('Address')
-                        ->columnSpanFull(),
+                        ->disabled()
+                        ->columnSpan(1),
+                        
+                    TextInput::make('ccustemail')
+                        ->label('Email')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccustemail')
-                        ->label('Email'),
+                    TextInput::make('ccustphone')
+                        ->label('Phone')
+                        ->disabled()
+                        ->columnSpan(1),
+                        
+                    TextInput::make('ccust2vanumber')
+                        ->label('VA Number')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccustphone')
-                        ->label('Phone'),
+                    TextInput::make('ccust2provider')
+                        ->label('Provider')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2vanumber')
-                        ->label('VA Number'),
+                    TextInput::make('ccust2bank')
+                        ->label('Bank')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2provider')
-                        ->label('Provider'),
+                    TextInput::make('ccust2mobile1')
+                        ->label('Mobile 1')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2bank')
-                        ->label('Bank'),
+                    TextInput::make('ccust2mobile2')
+                        ->label('Mobile 2')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2mobile1')
-                        ->label('Mobile 1'),
+                    TextInput::make('ccust2email1')
+                        ->label('Email 1')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2mobile2')
-                        ->label('Mobile 2'),
+                    TextInput::make('ccust2type')
+                        ->label('Customer Type')
+                        ->disabled()
+                        ->columnSpan(1),
 
-                    TextEntry::make('ccust2email1')
-                        ->label('Email 1'),
-
-                    TextEntry::make('ccust2type')
-                        ->label('Customer Type'),
-
-                    TextEntry::make('ccuststatus')
-                        ->label('Status'),
-
-                    TextEntry::make('dcustlastup')
-                        ->label('Last Update'),
+                    TextInput::make('ccuststatus')
+                        ->label('Status')
+                        ->disabled()
+                        ->columnSpan(1),
+                    
+                    TextInput::make('dcustlastup')
+                        ->label('Last Update')
+                        ->disabled()
+                        ->columnSpan(1),
                 ]),
             ]);
     }
