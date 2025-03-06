@@ -25,7 +25,7 @@ class CustomerQontakResource extends Resource
     {
         return $form
             ->schema([
-                
+                //
             ]);
     }
 
