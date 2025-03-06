@@ -5,10 +5,9 @@ namespace App\Filament\Resources\CustomerQontakResource\Pages;
 use App\Filament\Resources\CustomerQontakResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Grid;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Infolist;
 
 class ViewCustomerQontak extends ViewRecord
 {
@@ -21,25 +20,54 @@ class ViewCustomerQontak extends ViewRecord
         ];
     }
 
-    protected function getFormSchema(): array
+    public function Infolist(Infolist $infolist): Infolist
     {
-        return [
-            Grid::make(2)->schema([
-                TextInput::make('ccustcode')->label('Customer Code')->disabled(),
-                TextInput::make('ccustname')->label('Customer Name')->disabled(),
-                Textarea::make('custaddress')->label('Address')->disabled(),
-                TextInput::make('ccustemail')->label('Email')->disabled(),
-                TextInput::make('ccustphone')->label('Phone')->disabled(),
-                TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
-                TextInput::make('ccust2provider')->label('Provider')->disabled(),
-                TextInput::make('ccust2bank')->label('Bank')->disabled(),
-                TextInput::make('ccust2mobile1')->label('Mobile 1')->disabled(),
-                TextInput::make('ccust2mobile2')->label('Mobile 2')->disabled(),
-                TextInput::make('ccust2email1')->label('Email 1')->disabled(),
-                TextInput::make('ccust2type')->label('Customer Type')->disabled(),
-                TextInput::make('ccuststatus')->label('Status')->disabled(),
-                TextInput::make('dcustlastup')->label('Last Update')->disabled(),
-            ]),
-        ];
+        return $infolist
+            ->schema([
+                Grid::make(2)->schema([
+                    TextEntry::make('ccustcode')
+                        ->label('Customer Code'),
+
+                    TextEntry::make('ccustname')
+                        ->label('Customer Name'),
+
+                    TextEntry::make('custaddress')
+                        ->label('Address')
+                        ->columnSpanFull(),
+
+                    TextEntry::make('ccustemail')
+                        ->label('Email'),
+
+                    TextEntry::make('ccustphone')
+                        ->label('Phone'),
+
+                    TextEntry::make('ccust2vanumber')
+                        ->label('VA Number'),
+
+                    TextEntry::make('ccust2provider')
+                        ->label('Provider'),
+
+                    TextEntry::make('ccust2bank')
+                        ->label('Bank'),
+
+                    TextEntry::make('ccust2mobile1')
+                        ->label('Mobile 1'),
+
+                    TextEntry::make('ccust2mobile2')
+                        ->label('Mobile 2'),
+
+                    TextEntry::make('ccust2email1')
+                        ->label('Email 1'),
+
+                    TextEntry::make('ccust2type')
+                        ->label('Customer Type'),
+
+                    TextEntry::make('ccuststatus')
+                        ->label('Status'),
+
+                    TextEntry::make('dcustlastup')
+                        ->label('Last Update'),
+                ]),
+            ]);
     }
 }
