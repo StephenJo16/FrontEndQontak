@@ -40,7 +40,7 @@ class BillingQontakResource extends Resource
                 TextColumn::make('cbillhcustomerbillcd')->label('Customer Bill Code')->searchable(),
                 TextColumn::make('dbillhdate')->label('Billing Date'),
                 TextColumn::make('fbillhnettvalue')->label('Net Value')->money('IDR'),
-                TextColumn::make('fbillhtotal')->label('Total Bill')->money('IDR'),
+                TextColumn::make('fbillhtotal')->label('Total Bill')->money('IDR')
 
             ])
             ->filters([
