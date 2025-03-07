@@ -16,7 +16,7 @@ class ViewBillingQontak extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            
+           
         ];
     }
 
@@ -35,6 +35,16 @@ class ViewBillingQontak extends ViewRecord
                         ->disabled()
                         ->columnSpan(1),
 
+                    TextInput::make('dbillhstartperiod')
+                        ->label('Start Period')
+                        ->disabled()
+                        ->columnSpan(1),
+
+                    TextInput::make('dbillhendperiod')
+                        ->label('End Period')
+                        ->disabled()
+                        ->columnSpan(1),
+
                     TextInput::make('dbillhdate')
                         ->label('Billing Date')
                         ->disabled()
@@ -45,15 +55,26 @@ class ViewBillingQontak extends ViewRecord
                         ->disabled()
                         ->columnSpan(1),
 
+                    TextInput::make('fbillhdpp')
+                        ->label('DPP')
+                        ->disabled()
+                        ->columnSpan(1),
+
+                    TextInput::make('fbillhppn')
+                        ->label('PPN')
+                        ->disabled()
+                        ->columnSpan(1),
+
+                    TextInput::make('ccust2vanumber')
+                        ->label('VA Number')
+                        ->disabled()
+                        ->columnSpan(1),
+
                     TextInput::make('fbillhtotal')
                         ->label('Total Bill')
                         ->disabled()
                         ->columnSpan(1),
 
-                    TextInput::make('description')
-                        ->label('Description')
-                        ->disabled()
-                        ->columnSpanFull(),
                 ]),
             ]);
     }

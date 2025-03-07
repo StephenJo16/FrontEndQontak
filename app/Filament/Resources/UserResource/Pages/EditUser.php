@@ -13,7 +13,11 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+            ->requiresConfirmation()
+            ->modalHeading('Are you sure?')
+            ->modalDescription('This action cannot be undone.')
+            ->modalButton('Yes, Delete'),
         ];
     }
 }
