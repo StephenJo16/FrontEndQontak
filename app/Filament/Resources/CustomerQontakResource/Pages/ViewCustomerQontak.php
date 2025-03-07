@@ -3,11 +3,8 @@
 namespace App\Filament\Resources\CustomerQontakResource\Pages;
 use Filament\Forms\Components\TextInput;
 use App\Filament\Resources\CustomerQontakResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\Grid;
-use Filament\Infolists\Infolist;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 
 class ViewCustomerQontak extends ViewRecord

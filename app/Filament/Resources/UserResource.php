@@ -24,8 +24,18 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
+             ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->unique(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->unique()
+                    ->required(),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->minLength(8),
             ]);
     }
 
@@ -43,6 +53,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
