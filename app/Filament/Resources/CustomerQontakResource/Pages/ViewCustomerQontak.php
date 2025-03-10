@@ -25,7 +25,7 @@ class ViewCustomerQontak extends ViewRecord
             ->schema([
                 Grid::make(2)->schema([
                     TextInput::make('ccustcode')
-                        ->label('Customer Code')
+                        ->label('Customer ID')
                         ->disabled()
                         ->columnSpan(1),
 

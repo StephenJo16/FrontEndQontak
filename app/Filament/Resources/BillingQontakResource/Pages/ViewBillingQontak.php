@@ -31,7 +31,7 @@ class ViewBillingQontak extends ViewRecord
                         ->columnSpan(1),
 
                     TextInput::make('cbillhcustomerbillcd')
-                        ->label('Customer Bill Code')
+                        ->label('Customer ID')
                         ->disabled()
                         ->columnSpan(1),
 
