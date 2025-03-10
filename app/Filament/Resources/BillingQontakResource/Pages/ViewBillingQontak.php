@@ -52,17 +52,23 @@ class ViewBillingQontak extends ViewRecord
 
                     TextInput::make('fbillhnettvalue')
                         ->label('Net Value')
+                        ->prefix('IDR ')
                         ->disabled()
+                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
                         ->columnSpan(1),
 
                     TextInput::make('fbillhdpp')
                         ->label('DPP')
+                        ->prefix('IDR ')
                         ->disabled()
+                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
                         ->columnSpan(1),
 
                     TextInput::make('fbillhppn')
                         ->label('PPN')
+                        ->prefix('IDR ')
                         ->disabled()
+                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
                         ->columnSpan(1),
 
                     TextInput::make('ccust2vanumber')
@@ -72,10 +78,12 @@ class ViewBillingQontak extends ViewRecord
 
                     TextInput::make('fbillhtotal')
                         ->label('Total Bill')
+                        ->prefix('IDR ')
                         ->disabled()
+                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
                         ->columnSpan(1),
 
                 ]),
             ]);
     }
-}
+} ?>
