@@ -33,7 +33,7 @@ class CustomerQontakResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('ccustcode')->label('Customer Code')->searchable(),
+                TextColumn::make('ccustcode')->label('Customer ID')->searchable(),
                 TextColumn::make('ccustname')->label('Customer Name')->searchable(),
                 TextColumn::make('custaddress')->label('Address')->searchable(),
                 TextColumn::make('ccust2loccode')->label('Location Code')->searchable(),
