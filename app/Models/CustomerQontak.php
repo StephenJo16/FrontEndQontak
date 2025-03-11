@@ -30,6 +30,5 @@ class CustomerQontak extends Model
 
     protected $casts = [
         'ccustcode' => 'string',
-        'dcustlastup' => 'datetime', 
     ];
 }
