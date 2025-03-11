@@ -8,7 +8,6 @@ use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Repeater;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewCustomerBilling extends ViewRecord
@@ -50,6 +49,7 @@ class ViewCustomerBilling extends ViewRecord
                                 TextInput::make('dcustlastup')->label('Last Updated')->disabled(),
                             ])
                             ->columnSpan(1),
+
                         Section::make('Payment Details')
                             ->description('Additional payment-related information.')
                             ->schema([
@@ -63,30 +63,15 @@ class ViewCustomerBilling extends ViewRecord
                 Section::make('Billing Information')
                     ->description('Billing and transaction details.')
                     ->schema([
-                        Repeater::make('billings')
+                        Section::make('Billing 1')
                             ->schema([
-                                TextInput::make('cbillhnumber')->label('Bill Number')->disabled(),
-                                Grid::make(4)
+                                Grid::make(5)
                                     ->schema([
-                                        TextInput::make('dbillhstartperiod')->label('Start Period')->disabled(),
+                                        TextInput::make('cbillhnumber')->label('Bill Number')->disabled(),
                                         TextInput::make('dbillhdate')->label('Billing Date')->disabled(),
-                                        TextInput::make('dbillhendperiod')->label('End Period')->disabled(),
                                         TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
-                                    ]),
-                                Grid::make(4)
-                                    ->schema([
                                         TextInput::make('fbillhnettvalue')
                                             ->label('Net Value')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                        TextInput::make('fbillhdpp')
-                                            ->label('DPP')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                        TextInput::make('fbillhppn')
-                                            ->label('PPN')
                                             ->prefix('IDR ')
                                             ->disabled()
                                             ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
@@ -96,11 +81,26 @@ class ViewCustomerBilling extends ViewRecord
                                             ->disabled()
                                             ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
                                     ]),
-                            ])
-                            ->collapsed()
-                            ->itemLabel(fn ($state) => "Billing " . ($state['cbillhnumber'] ?? '')),
-                    ])
-                    ->columnSpanFull(),
+                            ]),
+
+                        Section::make('Billing 2')
+                            ->schema([
+                                Grid::make(5)
+                                    ->schema([
+                                        TextInput::make('cbillhnumber')->label('Bill Number')->disabled(),
+                                        TextInput::make('dbillhdate')->label('Billing Date')->disabled(),
+                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
+                                        TextInput::make('fbillhnettvalue')
+                                            ->label('Net Value')
+                                            ->prefix('IDR ')
+                                            ->disabled(),
+                                        TextInput::make('fbillhtotal')
+                                            ->label('Total Bill')
+                                            ->prefix('IDR ')
+                                            ->disabled(),
+                                    ]),
+                            ]),
+                    ]),
 
                 Grid::make(2)
                     ->schema([
