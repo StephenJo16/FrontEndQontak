@@ -60,6 +60,7 @@ class BillingQontakResource extends Resource
                         $q->where('dbillhendperiod', '<=', $data['dbillhendperiod']))
                     ),
             ])  
+            ->searchPlaceholder('Search by Customer ID ')
             ->actions([
               
             ])

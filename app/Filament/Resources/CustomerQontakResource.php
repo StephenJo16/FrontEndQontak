@@ -34,20 +34,20 @@ class CustomerQontakResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('ccustcode')->label('Customer ID')->searchable(),
-                TextColumn::make('ccustname')->label('Customer Name')->searchable(),
-                TextColumn::make('custaddress')->label('Address')->searchable(),
-                TextColumn::make('ccust2loccode')->label('Location Code')->searchable(),
-                TextColumn::make('ccustemail')->label('Email')->searchable(),
-                TextColumn::make('ccustphone')->label('Phone')->searchable(),
-                TextColumn::make('ccust2vanumber')->label('VA Number')->searchable(),
-                TextColumn::make('ccust2provider')->label('Provider')->searchable(),
-                TextColumn::make('ccust2bank')->label('Bank')->searchable(),
-                TextColumn::make('ccust2mobile1')->label('Mobile 1')->searchable(),
-                TextColumn::make('ccust2mobile2')->label('Mobile 2')->searchable(),
-                TextColumn::make('ccust2email1')->label('Email 1')->searchable(),
-                TextColumn::make('ccust2type')->label('Customer Type')->searchable(),
-                TextColumn::make('ccuststatus')->label('Status')->searchable(),
-                TextColumn::make('dcustlastup')->label('Last Update')->sortable(),
+                TextColumn::make('ccustname')->label('Customer Name'),
+                TextColumn::make('custaddress')->label('Address'),
+                TextColumn::make('ccust2loccode')->label('Location Code'),
+                TextColumn::make('ccustemail')->label('Email'),
+                TextColumn::make('ccustphone')->label('Phone'),
+                TextColumn::make('ccust2vanumber')->label('VA Number'),
+                TextColumn::make('ccust2provider')->label('Provider'),
+                TextColumn::make('ccust2bank')->label('Bank'),
+                TextColumn::make('ccust2mobile1')->label('Mobile 1'),
+                TextColumn::make('ccust2mobile2')->label('Mobile 2'),
+                TextColumn::make('ccust2email1')->label('Email 1'),
+                TextColumn::make('ccust2type')->label('Customer Type'),
+                TextColumn::make('ccuststatus')->label('Status'),
+                TextColumn::make('dcustlastup')->label('Last Update'),
             ])
             ->filters([
                 Filter::make('Last Update')
@@ -57,7 +57,20 @@ class CustomerQontakResource extends Resource
                     ->query(fn ($query, $data) => $query->when($data['dcustlastup'], fn ($q) => 
                         $q->where('dcustlastup', '>=', $data['dcustlastup']))
                     ),
+                 Filter::make('Customer Name')
+                    ->form([
+                        Forms\Components\TextInput::make('ccustname')->label('Customer Name'),
+                    ])
+                    ->query(fn ($query, $data) => $query->when($data['ccustname'], fn ($q) => 
+                        $q->where('ccustname', 'like', "%{$data['ccustname']}%"))),
+                 Filter::make('Address')
+                    ->form([
+                        Forms\Components\TextInput::make('custaddress')->label('Address'),
+                    ])
+                    ->query(fn ($query, $data) => $query->when($data['custaddress'], fn ($q) => 
+                        $q->where('custaddress', 'like', "%{$data['custaddress']}%"))),
             ])
+            ->searchPlaceholder('Search by Customer ID')
             ->actions([
                 
             ])
