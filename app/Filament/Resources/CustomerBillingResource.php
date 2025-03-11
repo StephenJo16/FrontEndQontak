@@ -7,6 +7,7 @@ use App\Models\CustomerBilling;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -22,7 +23,7 @@ class CustomerBillingResource extends Resource
     {
         return $form
             ->schema([
-                //
+                
             ]);
     }
 
@@ -30,7 +31,7 @@ class CustomerBillingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('ccustcode')->label('Customer Code')->searchable(),
+                TextColumn::make('ccustcode')->label('Customer ID')->searchable(),
                 TextColumn::make('ccustname')->label('Customer Name'),
                 TextColumn::make('custaddress')->label('Address'),
                 TextColumn::make('ccustphone')->label('Phone'),
@@ -39,8 +40,20 @@ class CustomerBillingResource extends Resource
                 TextColumn::make('fbillhtotal')->label('Total Bill')->money('IDR'),
             ])
             ->filters([
-                
+                 Filter::make('Customer Name')
+                    ->form([
+                        Forms\Components\TextInput::make('ccustname')->label('Customer Name'),
+                    ])
+                    ->query(fn ($query, $data) => $query->when($data['ccustname'], fn ($q) => 
+                        $q->where('ccustname', 'like', "%{$data['ccustname']}%"))),
+                 Filter::make('Address')
+                    ->form([
+                        Forms\Components\TextInput::make('custaddress')->label('Address'),
+                    ])
+                    ->query(fn ($query, $data) => $query->when($data['custaddress'], fn ($q) => 
+                        $q->where('custaddress', 'like', "%{$data['custaddress']}%"))),
             ])
+            ->searchPlaceholder('Search by Customer ID')
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])

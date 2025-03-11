@@ -25,13 +25,11 @@ class ViewCustomerBilling extends ViewRecord
     {
         return $form
             ->schema([
-                // Customer ID sebagai penanda record
                 TextInput::make('ccustcode')
                     ->label('Customer ID')
                     ->disabled()
                     ->columnSpanFull(),
 
-                // Customer Information Section
                 Section::make('Customer Information')
                     ->description('Customer personal and contact details.')
                     ->schema([
@@ -54,7 +52,6 @@ class ViewCustomerBilling extends ViewRecord
                         TextInput::make('dcustlastup')->label('Last Updated')->disabled(),
                     ]),
 
-                // Billing Information Section
                 Section::make('Billing Information')
                     ->description('Billing and transaction details.')
                     ->schema([
