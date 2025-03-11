@@ -40,18 +40,25 @@ class CustomerBillingResource extends Resource
                 TextColumn::make('fbillhtotal')->label('Total Bill')->money('IDR'),
             ])
             ->filters([
-                 Filter::make('Customer Name')
+                Filter::make('Customer Name')
                     ->form([
                         Forms\Components\TextInput::make('ccustname')->label('Customer Name'),
                     ])
-                    ->query(fn ($query, $data) => $query->when($data['ccustname'], fn ($q) => 
-                        $q->where('ccustname', 'like', "%{$data['ccustname']}%"))),
-                 Filter::make('Address')
+                    ->query(fn ($query, $data) => 
+                        $query->when($data['ccustname'], fn ($q) => 
+                            $q->whereRaw('LOWER(ccustname) LIKE ?', ['%' . strtolower($data['ccustname']) . '%'])
+                        )
+                    ),
+
+                Filter::make('Address')
                     ->form([
                         Forms\Components\TextInput::make('custaddress')->label('Address'),
                     ])
-                    ->query(fn ($query, $data) => $query->when($data['custaddress'], fn ($q) => 
-                        $q->where('custaddress', 'like', "%{$data['custaddress']}%"))),
+                    ->query(fn ($query, $data) => 
+                        $query->when($data['custaddress'], fn ($q) => 
+                            $q->whereRaw('LOWER(custaddress) LIKE ?', ['%' . strtolower($data['custaddress']) . '%'])
+                        )
+                    ),
             ])
             ->searchPlaceholder('Search by Customer ID')
             ->actions([

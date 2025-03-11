@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Repeater;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewCustomerBilling extends ViewRecord
@@ -16,9 +17,7 @@ class ViewCustomerBilling extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            
-        ];
+        return [];
     }
 
     public function form(Form $form): Form
@@ -30,68 +29,88 @@ class ViewCustomerBilling extends ViewRecord
                     ->disabled()
                     ->columnSpanFull(),
 
-                Section::make('Customer Information')
-                    ->description('Customer personal and contact details.')
+                Grid::make(2)
                     ->schema([
-                        Grid::make(2)
+                        Section::make('Customer Information')
+                            ->description('Customer personal and contact details.')
                             ->schema([
-                                TextInput::make('ccustname')->label('Customer Name')->disabled(),
-                                TextInput::make('ccustphone')->label('Phone')->disabled(),
-                                TextInput::make('ccustemail')->label('Email')->disabled(),
-                                TextInput::make('ccuststatus')->label('Status')->disabled(),
-                                TextInput::make('ccust2loccode')->label('Location Code')->disabled(),
-                                TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
-                                TextInput::make('ccust2provider')->label('Provider')->disabled(),
-                                TextInput::make('ccust2bank')->label('Bank')->disabled(),
-                                TextInput::make('ccust2mobile1')->label('Mobile 1')->disabled(),
-                                TextInput::make('ccust2mobile2')->label('Mobile 2')->disabled(),
-                                TextInput::make('ccust2email1')->label('Alternate Email')->disabled(),
-                                TextInput::make('ccust2type')->label('Customer Type')->disabled(),
-                            ]),
-                        TextInput::make('custaddress')->label('Address')->columnSpanFull()->disabled(),
-                        TextInput::make('dcustlastup')->label('Last Updated')->disabled(),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('ccustname')->label('Customer Name')->disabled(),
+                                        TextInput::make('ccustphone')->label('Phone')->disabled(),
+                                        TextInput::make('ccustemail')->label('Email')->disabled(),
+                                        TextInput::make('ccuststatus')->label('Status')->disabled(),
+                                        TextInput::make('ccust2loccode')->label('Location Code')->disabled(),
+                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
+                                        TextInput::make('ccust2provider')->label('Provider')->disabled(),
+                                        TextInput::make('ccust2mobile1')->label('Mobile 1')->disabled(),
+                                        TextInput::make('ccust2type')->label('Customer Type')->disabled(),
+                                    ]),
+                                TextInput::make('custaddress')->label('Address')->columnSpanFull()->disabled(),
+                                TextInput::make('dcustlastup')->label('Last Updated')->disabled(),
+                            ])
+                            ->columnSpan(1),
+                        Section::make('Payment Details')
+                            ->description('Additional payment-related information.')
+                            ->schema([
+                                TextInput::make('payment_status')->label('Payment Status')->disabled(),
+                                TextInput::make('payment_due_date')->label('Due Date')->disabled(),
+                                TextInput::make('payment_method')->label('Payment Method')->disabled(),
+                            ])
+                            ->columnSpan(1),
                     ]),
 
                 Section::make('Billing Information')
                     ->description('Billing and transaction details.')
                     ->schema([
-                        Grid::make(2)
+                        Repeater::make('billings')
                             ->schema([
                                 TextInput::make('cbillhnumber')->label('Bill Number')->disabled(),
-                                TextInput::make('dbillhstartperiod')->label('Start Period')->disabled(),
-                                TextInput::make('dbillhdate')->label('Billing Date')->disabled(),
-                                TextInput::make('dbillhendperiod')->label('End Period')->disabled(),
+                                Grid::make(4)
+                                    ->schema([
+                                        TextInput::make('dbillhstartperiod')->label('Start Period')->disabled(),
+                                        TextInput::make('dbillhdate')->label('Billing Date')->disabled(),
+                                        TextInput::make('dbillhendperiod')->label('End Period')->disabled(),
+                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
+                                    ]),
+                                Grid::make(4)
+                                    ->schema([
+                                        TextInput::make('fbillhnettvalue')
+                                            ->label('Net Value')
+                                            ->prefix('IDR ')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                        TextInput::make('fbillhdpp')
+                                            ->label('DPP')
+                                            ->prefix('IDR ')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                        TextInput::make('fbillhppn')
+                                            ->label('PPN')
+                                            ->prefix('IDR ')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                        TextInput::make('fbillhtotal')
+                                            ->label('Total Bill')
+                                            ->prefix('IDR ')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                    ]),
+                            ])
+                            ->collapsed()
+                            ->itemLabel(fn ($state) => "Billing " . ($state['cbillhnumber'] ?? '')),
+                    ])
+                    ->columnSpanFull(),
 
-                                TextInput::make('fbillhnettvalue')
-                                    ->label('Net Value')
-                                    ->prefix('IDR ')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
-                                    ->columnSpan(1),
-
-                                TextInput::make('fbillhdpp')
-                                    ->label('DPP')
-                                    ->prefix('IDR ')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
-                                    ->columnSpan(1),
-
-                                TextInput::make('fbillhppn')
-                                    ->label('PPN')
-                                    ->prefix('IDR ')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
-                                    ->columnSpan(1),
-
-                                TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
-
-                                TextInput::make('fbillhtotal')
-                                    ->label('Total Bill')
-                                    ->prefix('IDR ')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.'))
-                                    ->columnSpan(1),
-                            ]),
+                Grid::make(2)
+                    ->schema([
+                        Section::make('Additional Information')
+                            ->description('Miscellaneous details about the customer or billing.')
+                            ->schema([
+                                TextInput::make('additional_notes')->label('Notes')->disabled(),
+                                TextInput::make('reference_number')->label('Reference Number')->disabled(),
+                            ])
+                            ->columnSpan(1),
                     ]),
             ]);
     }
