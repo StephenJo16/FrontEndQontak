@@ -58,25 +58,28 @@ class ViewPortalC3 extends ViewRecord
                             ->description('Odoo related details.')
                             ->collapsible()
                             ->schema([
-                                TextInput::make('odoo_id')->label('Odoo ID')->disabled(),
-                                TextInput::make('odoo_name')->label('Odoo Name')->disabled(),
-                                TextInput::make('odoo_amount_total')
-                                    ->label('Total Amount')
-                                    ->prefix('IDR ')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                TextInput::make('odoo_service_type')->label('Service Type')->disabled(),
-                                TextInput::make('partner_name')->label('Partner Name')->disabled(),
-                                TextInput::make('partner_email')->label('Partner Email')->disabled(),
-                                TextInput::make('street')->label('Street')->disabled(),
-                                TextInput::make('blok')->label('Block')->disabled(),
-                                TextInput::make('number')->label('Number')->disabled(),
-                                TextInput::make('odoo_active')
-                                    ->label('Odoo Active')
-                                    ->disabled()
-                                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextInput::make('odoo_id')->label('Odoo ID')->disabled(),
+                                        TextInput::make('odoo_name')->label('Odoo Name')->disabled(),
+                                        TextInput::make('odoo_amount_total')
+                                            ->label('Total Amount')
+                                            ->prefix('IDR ')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                        TextInput::make('odoo_service_type')->label('Service Type')->disabled(),
+                                        TextInput::make('partner_name')->label('Partner Name')->disabled(),
+                                        TextInput::make('partner_email')->label('Partner Email')->disabled()->columnSpanFull(),
+                                        TextInput::make('street')->label('Street')->disabled()->columnSpanFull(),
+                                        TextInput::make('blok')->label('Block')->disabled(),
+                                        TextInput::make('number')->label('Number')->disabled(),
+                                        TextInput::make('odoo_active')
+                                            ->label('Odoo Active')
+                                            ->disabled()
+                                            ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                                    ]),
                             ])
-                            ->columnSpan(1)
+                            ->columnSpan(1),
                     ]),
 
                 // Billing Information
@@ -91,19 +94,9 @@ class ViewPortalC3 extends ViewRecord
                                     ->schema([
                                         TextInput::make("cbillhnumbers.{$index}")->label('Bill Number')->disabled(),
                                         TextInput::make("dbillhdates.{$index}")->label('Billing Date')->disabled(),
-                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
+                                        TextInput::make("ccust2vanumber.{$index}")->label('VA Number')->disabled(),
                                         TextInput::make("fbillhnettvalues.{$index}")
                                             ->label('Net Value')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                        TextInput::make("fbillhdpps.{$index}")
-                                            ->label('DPP')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                        TextInput::make("fbillhppns.{$index}")
-                                            ->label('PPN')
                                             ->prefix('IDR ')
                                             ->disabled()
                                             ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
@@ -113,7 +106,7 @@ class ViewPortalC3 extends ViewRecord
                                             ->disabled()
                                             ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
                                     ]),
-                            ]), range(0, 2)), 
+                            ]), range(0, 2)), // 3 Billing Sections
                     ]),
             ]);
     }
