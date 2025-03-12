@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Infolists\Components\TextEntry;
 
 class ViewCustomerBilling extends ViewRecord
 {
@@ -23,15 +24,17 @@ class ViewCustomerBilling extends ViewRecord
     {
         return $form
             ->schema([
-                TextInput::make('ccustcode')
+               TextInput::make('ccustcode')
                     ->label('Customer ID')
                     ->disabled()
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->prefixIcon('heroicon-o-identification'),
 
                 Grid::make(2)
                     ->schema([
                         Section::make('Customer Information')
                             ->description('Customer personal and contact details.')
+                            ->collapsible()
                             ->schema([
                                 Grid::make(2)
                                     ->schema([
@@ -52,6 +55,7 @@ class ViewCustomerBilling extends ViewRecord
 
                         Section::make('Payment Details')
                             ->description('Additional payment-related information.')
+                            ->collapsible()
                             ->schema([
                                 TextInput::make('payment_status')->label('Payment Status')->disabled(),
                                 TextInput::make('payment_due_date')->label('Due Date')->disabled(),
@@ -62,8 +66,10 @@ class ViewCustomerBilling extends ViewRecord
 
                 Section::make('Billing Information')
                     ->description('Billing and transaction details.')
+                    ->collapsible()
                     ->schema([
                         Section::make('Billing 1')
+                            ->collapsible()
                             ->schema([
                                 Grid::make(5)
                                     ->schema([
@@ -84,6 +90,7 @@ class ViewCustomerBilling extends ViewRecord
                             ]),
 
                         Section::make('Billing 2')
+                            ->collapsible()
                             ->schema([
                                 Grid::make(5)
                                     ->schema([
@@ -100,12 +107,31 @@ class ViewCustomerBilling extends ViewRecord
                                             ->disabled(),
                                     ]),
                             ]),
+                        Section::make('Billing 3')
+                        ->collapsible()
+                        ->schema([
+                             Grid::make(5)
+                                ->schema([
+                                    TextInput::make('cbillhnumber')->label('Bill Number')->disabled(),
+                                    TextInput::make('dbillhdate')->label('Billing Date')->disabled(),
+                                    TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
+                                    TextInput::make('fbillhnettvalue')
+                                        ->label('Net Value')
+                                        ->prefix('IDR ')
+                                        ->disabled(),
+                                    TextInput::make('fbillhtotal')
+                                        ->label('Total Bill')
+                                        ->prefix('IDR ')
+                                        ->disabled(),
+                                ]),
+                        ]),
                     ]),
 
                 Grid::make(2)
                     ->schema([
                         Section::make('Additional Information')
                             ->description('Miscellaneous details about the customer or billing.')
+                            ->collapsible()
                             ->schema([
                                 TextInput::make('additional_notes')->label('Notes')->disabled(),
                                 TextInput::make('reference_number')->label('Reference Number')->disabled(),

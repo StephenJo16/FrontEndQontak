@@ -33,11 +33,7 @@ class CustomerBillingResource extends Resource
             ->columns([
                 TextColumn::make('ccustcode')->label('Customer ID')->searchable(),
                 TextColumn::make('ccustname')->label('Customer Name'),
-                TextColumn::make('custaddress')->label('Address'),
-                TextColumn::make('ccustphone')->label('Phone'),
-                TextColumn::make('ccustemail1')->label('Email'),
-                TextColumn::make('cbillhnumber')->label('Bill Number'),
-                TextColumn::make('fbillhtotal')->label('Total Bill')->money('IDR'),
+                TextColumn::make('custaddress')->label('Address')
             ])
             ->filters([
                 Filter::make('Customer Name')
@@ -65,16 +61,7 @@ class CustomerBillingResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])
-            ->modifyQueryUsing(function ($query) {
-                $hasFilters = !empty(request()->input('tableFilters'));
-                $hasSearch = !empty(request()->input('tableSearchQuery'));
-
-                // Hanya tampilkan data jika ada pencarian atau filter yang diisi
-                if (!$hasFilters && !$hasSearch) {
-                    $query->whereRaw('1 = 0');
-                }
-            });
+            ]);
     }
 
     public static function getRelations(): array
