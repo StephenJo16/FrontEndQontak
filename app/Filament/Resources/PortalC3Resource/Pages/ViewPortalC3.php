@@ -101,10 +101,6 @@ class ViewPortalC3 extends ViewRecord
                                             ->label('Billing Date')
                                             ->disabled()
                                             ->default(fn ($record) => $record->dbillhdates[$index] ?? 'N/A'),
-                                        TextInput::make("ccust2vanumber.{$index}")
-                                            ->label('VA Number')
-                                            ->disabled()
-                                            ->default(fn ($record) => $record->ccust2vanumber[$index] ?? 'N/A'),
                                         TextInput::make("fbillhnettvalues.{$index}")
                                             ->label('Net Value')
                                             ->prefix('IDR ')
