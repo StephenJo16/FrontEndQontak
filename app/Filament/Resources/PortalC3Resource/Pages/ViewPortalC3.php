@@ -68,7 +68,7 @@ class ViewPortalC3 extends ViewRecord
                                             ->disabled()
                                             ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
                                         TextInput::make('odoo_service_type')->label('Service Type')->disabled(),
-                                        TextInput::make('partner_name')->label('Partner Name')->disabled(),
+                                        TextInput::make('partner_name')->label('Partner Name')->disabled()->columnSpanFull(),
                                         TextInput::make('partner_email')->label('Partner Email')->disabled()->columnSpanFull(),
                                         TextInput::make('street')->label('Street')->disabled()->columnSpanFull(),
                                         TextInput::make('blok')->label('Block')->disabled(),
@@ -76,14 +76,15 @@ class ViewPortalC3 extends ViewRecord
                                         TextInput::make('odoo_active')
                                             ->label('Odoo Active')
                                             ->disabled()
-                                            ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
+                                            ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                                            ->columnSpanFull(),
                                     ]),
                             ])
                             ->columnSpan(1),
                     ]),
 
                 // Billing Information
-                Section::make('Billing Information')
+                Section::make('Billing Information (Last 3 Months)')
                     ->description('Billing and transaction details.')
                     ->collapsible()
                     ->schema([
@@ -92,19 +93,28 @@ class ViewPortalC3 extends ViewRecord
                             ->schema([
                                 Grid::make(5)
                                     ->schema([
-                                        TextInput::make("cbillhnumbers.{$index}")->label('Bill Number')->disabled(),
-                                        TextInput::make("dbillhdates.{$index}")->label('Billing Date')->disabled(),
-                                        TextInput::make("ccust2vanumber.{$index}")->label('VA Number')->disabled(),
+                                        TextInput::make("cbillhnumbers.{$index}")
+                                            ->label('Bill Number')
+                                            ->disabled()
+                                            ->default(fn ($record) => $record->cbillhnumbers[$index] ?? 'N/A'),
+                                        TextInput::make("dbillhdates.{$index}")
+                                            ->label('Billing Date')
+                                            ->disabled()
+                                            ->default(fn ($record) => $record->dbillhdates[$index] ?? 'N/A'),
+                                        TextInput::make("ccust2vanumber.{$index}")
+                                            ->label('VA Number')
+                                            ->disabled()
+                                            ->default(fn ($record) => $record->ccust2vanumber[$index] ?? 'N/A'),
                                         TextInput::make("fbillhnettvalues.{$index}")
                                             ->label('Net Value')
                                             ->prefix('IDR ')
                                             ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                            ->default(fn ($record) => isset($record->fbillhnettvalues[$index]) ? number_format($record->fbillhnettvalues[$index], 2, ',', '.') : 'N/A'),
                                         TextInput::make("fbillhtotals.{$index}")
                                             ->label('Total Bill')
                                             ->prefix('IDR ')
                                             ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                            ->default(fn ($record) => isset($record->fbillhtotals[$index]) ? number_format($record->fbillhtotals[$index], 2, ',', '.') : 'N/A'),
                                     ]),
                             ]), range(0, 2)), // 3 Billing Sections
                     ]),
