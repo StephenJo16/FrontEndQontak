@@ -20,7 +20,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
-
+    
+    protected static ?string $navigationGroup = 'Resources';
     public static function form(Form $form): Form
     {
         return $form
@@ -39,7 +40,10 @@ class UserResource extends Resource
                     ->minLength(8),
             ]);
     }
-
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
     public static function table(Table $table): Table
     {
         return $table

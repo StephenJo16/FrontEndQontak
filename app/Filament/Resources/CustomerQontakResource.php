@@ -21,6 +21,8 @@ class CustomerQontakResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    protected static ?string $navigationGroup = 'Resources';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -28,6 +30,11 @@ class CustomerQontakResource extends Resource
                 //
             ]);
     }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
 
     public static function table(Table $table): Table
     {

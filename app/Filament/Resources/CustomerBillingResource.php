@@ -5,13 +5,11 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CustomerBillingResource\Pages;
 use App\Models\CustomerBilling;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\NumberColumn;
 
 class CustomerBillingResource extends Resource
 {
@@ -19,14 +17,16 @@ class CustomerBillingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                
-            ]);
-    }
+    protected static ?string $navigationGroup = 'Resources';
 
+    public static function form(Forms\Form $form): Forms\Form
+    {
+        return $form->schema([]);
+    }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
     public static function table(Table $table): Table
     {
         return $table
@@ -44,38 +44,42 @@ class CustomerBillingResource extends Resource
                     ->form([
                         Forms\Components\TextInput::make('ccustname')->label('Customer Name'),
                     ])
-                    ->query(fn ($query, $data) => 
-                        $query->when($data['ccustname'], fn ($q) => 
+                    ->query(fn ($query, $data) =>
+                        $query->when($data['ccustname'], fn ($q) =>
                             $q->whereRaw('LOWER(ccustname) LIKE ?', ['%' . strtolower($data['ccustname']) . '%'])
                         )
                     ),
-
                 Filter::make('Address')
                     ->form([
                         Forms\Components\TextInput::make('custaddress')->label('Address'),
                     ])
-                    ->query(fn ($query, $data) => 
-                        $query->when($data['custaddress'], fn ($q) => 
+                    ->query(fn ($query, $data) =>
+                        $query->when($data['custaddress'], fn ($q) =>
                             $q->whereRaw('LOWER(custaddress) LIKE ?', ['%' . strtolower($data['custaddress']) . '%'])
                         )
                     ),
             ])
-            ->searchPlaceholder('Search by Customer ID')
+            ->searchable()
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                Tables\Actions\DeleteBulkAction::make(),
+            ])
+            ->modifyQueryUsing(function ($query) {
+                $hasFilters = !empty(request()->input('tableFilters'));
+                $hasSearch = !empty(request()->input('tableSearchQuery'));
+
+                // Hanya tampilkan data jika ada pencarian atau filter yang diisi
+                if (!$hasFilters && !$hasSearch) {
+                    $query->whereRaw('1 = 0');
+                }
+            });
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
