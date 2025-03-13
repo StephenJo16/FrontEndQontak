@@ -83,37 +83,85 @@ class ViewPortalC3 extends ViewRecord
                             ->columnSpan(1),
                     ]),
 
-                // Billing Information
-                Section::make('Billing Information (Last 3 Months)')
+                    Section::make('Billing Information')
                     ->description('Billing and transaction details.')
                     ->collapsible()
-                    ->schema([
-                        ...array_map(fn ($index) => Section::make("Billing " . ($index + 1))
-                            ->collapsible()
-                            ->schema([
-                                Grid::make(5)
-                                    ->schema([
-                                        TextInput::make("cbillhnumbers.{$index}")
-                                            ->label('Bill Number')
-                                            ->disabled()
-                                            ->default(fn ($record) => $record->cbillhnumbers[$index] ?? 'N/A'),
-                                        TextInput::make("dbillhdates.{$index}")
-                                            ->label('Billing Date')
-                                            ->disabled()
-                                            ->default(fn ($record) => $record->dbillhdates[$index] ?? 'N/A'),
-                                        TextInput::make("fbillhnettvalues.{$index}")
-                                            ->label('Net Value')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->default(fn ($record) => isset($record->fbillhnettvalues[$index]) ? number_format($record->fbillhnettvalues[$index], 2, ',', '.') : 'N/A'),
-                                        TextInput::make("fbillhtotals.{$index}")
-                                            ->label('Total Bill')
-                                            ->prefix('IDR ')
-                                            ->disabled()
-                                            ->default(fn ($record) => isset($record->fbillhtotals[$index]) ? number_format($record->fbillhtotals[$index], 2, ',', '.') : 'N/A'),
-                                    ]),
-                            ]), range(0, 2)), // 3 Billing Sections
-                    ]),
+                    ->schema(
+                        function () {
+                            // Helper function to ensure data is an array
+                            $ensureArray = function ($data) {
+                                if (is_array($data)) {
+                                    return $data;
+                                }
+                
+                                // If data is a JSON string, decode it
+                                if (is_string($data)) {
+                                    $data = trim($data, '{}'); // Remove curly braces if they exist
+                                    $data = str_replace('"', '', $data); // Remove double quotes
+                                    return explode(',', $data); // Convert string to array
+                                }
+                
+                                return []; // Fallback to an empty array
+                            };
+                
+                            // Retrieve and ensure values are arrays
+                            $billingNumbers = $ensureArray(data_get($this->record, 'cbillhnumbers'));
+                            $billingDates = $ensureArray(data_get($this->record, 'dbillhdates'));
+                            //$vaNumbers = $ensureArray(data_get($this->record, 'ccust2vanumber'));
+                            $netValues = $ensureArray(data_get($this->record, 'fbillhnettvalues'));
+                            $totalBills = $ensureArray(data_get($this->record, 'fbillhtotals'));
+                
+                            // Determine the number of sections
+                            $maxSections = max(
+                                count($billingNumbers),
+                                count($billingDates),
+                                //count($vaNumbers),
+                                count($netValues),
+                                count($totalBills)
+                            );
+                
+                            // Generate sections dynamically
+                            return collect(range(0, $maxSections - 1))->map(
+                                function ($index) use ($billingNumbers, $billingDates, $netValues, $totalBills) {
+                                    return Section::make("Billing " . ($index + 1))
+                                        ->collapsible()
+                                        ->schema([
+                                            Grid::make(5)
+                                                ->schema([
+                                                    TextInput::make("cbillhnumbers")
+                                                        ->label('Bill Number')
+                                                        ->disabled()
+                                                        ->default($billingNumbers[$index] ?? 'N/A'),
+                
+                                                    TextInput::make("dbillhdates.{$index}")
+                                                        ->label('Billing Date')
+                                                        ->disabled()
+                                                        ->default($billingDates[$index] ?? 'N/A'),
+                
+                                                    //TextInput::make("ccust2vanumber.{$index}")
+                                                    //    ->label('VA Number')
+                                                    //    ->disabled()
+                                                    //    ->default($vaNumbers[$index] ?? 'N/A'),
+                
+                                                    TextInput::make("fbillhnettvalues.{$index}")
+                                                        ->label('Net Value')
+                                                        ->prefix('IDR ')
+                                                        ->disabled()
+                                                        ->default($netValues[$index] ?? 0)
+                                                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                
+                                                    TextInput::make("fbillhtotals.{$index}")
+                                                        ->label('Total Bill')
+                                                        ->prefix('IDR ')
+                                                        ->disabled()
+                                                        ->default($totalBills[$index] ?? 0)
+                                                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                                ]),
+                                        ]);
+                                }
+                            )->toArray();
+                        }
+                    ),
             ]);
     }
 }
