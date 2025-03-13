@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandLogo(asset('images/LogoCircleOne.png'))
-            ->brandLogoHeight('55px')
+            ->brandLogoHeight('45px')
             ->colors([
                 'primary' => Color::Amber,
             ])
