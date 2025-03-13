@@ -20,63 +20,64 @@ class ViewPortalC3 extends ViewRecord
 
     public function form(Form $form): Form
     {
+        $trim = fn($state) => trim((string) $state);
+
         return $form
             ->schema([
                 TextInput::make('ccustomer_id')
                     ->label('Customer ID')
                     ->disabled()
                     ->columnSpanFull()
-                    ->prefixIcon('heroicon-o-identification'),
+                    ->prefixIcon('heroicon-o-identification')
+                    ->formatStateUsing($trim),
 
                 Grid::make(2)
                     ->schema([
-                        // Customer Section
                         Section::make('Customer Information')
                             ->description('Customer personal and contact details.')
                             ->collapsible()
                             ->schema([
                                 Grid::make(2)
                                     ->schema([
-                                        TextInput::make('ccustname')->label('Customer Name')->disabled(),
-                                        TextInput::make('ccustphone')->label('Phone')->disabled(),
-                                        TextInput::make('ccustemail')->label('Email')->disabled(),
-                                        TextInput::make('ccuststatus')->label('Status')->disabled(),
-                                        TextInput::make('ccust2loccode')->label('Location Code')->disabled(),
-                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled(),
-                                        TextInput::make('ccust2provider')->label('Provider')->disabled(),
-                                        TextInput::make('ccust2type')->label('Customer Type')->disabled(),
-                                        TextInput::make('ccust2mobile1')->label('Mobile 1')->disabled(),
-                                        TextInput::make('ccust2mobile2')->label('Mobile 2')->disabled(),
+                                        TextInput::make('ccustname')->label('Customer Name')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccustphone')->label('Phone')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccustemail')->label('Email')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccuststatus')->label('Status')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2loccode')->label('Location Code')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2vanumber')->label('VA Number')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2provider')->label('Provider')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2type')->label('Customer Type')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2mobile1')->label('Mobile 1')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('ccust2mobile2')->label('Mobile 2')->disabled()->formatStateUsing($trim),
                                     ]),
-                                TextInput::make('custaddress')->label('Address')->columnSpanFull()->disabled(),
-                                TextInput::make('dcustlastup')->label('Last Updated')->disabled(),
+                                TextInput::make('custaddress')->label('Address')->columnSpanFull()->disabled()->formatStateUsing($trim),
+                                TextInput::make('dcustlastup')->label('Last Updated')->disabled()->formatStateUsing($trim),
                             ])
                             ->columnSpan(1),
 
-                        // Odoo Section
                         Section::make('Odoo Information')
                             ->description('Odoo related details.')
                             ->collapsible()
                             ->schema([
                                 Grid::make(2)
                                     ->schema([
-                                        TextInput::make('odoo_id')->label('Odoo ID')->disabled(),
-                                        TextInput::make('odoo_name')->label('Odoo Name')->disabled(),
+                                        TextInput::make('odoo_id')->label('Odoo ID')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('odoo_name')->label('Odoo Name')->disabled()->formatStateUsing($trim),
                                         TextInput::make('odoo_amount_total')
                                             ->label('Total Amount')
                                             ->prefix('IDR ')
                                             ->disabled()
-                                            ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                                        TextInput::make('odoo_service_type')->label('Service Type')->disabled(),
-                                        TextInput::make('partner_name')->label('Partner Name')->disabled()->columnSpanFull(),
-                                        TextInput::make('partner_email')->label('Partner Email')->disabled()->columnSpanFull(),
-                                        TextInput::make('street')->label('Street')->disabled()->columnSpanFull(),
-                                        TextInput::make('blok')->label('Block')->disabled(),
-                                        TextInput::make('number')->label('Number')->disabled(),
+                                            ->formatStateUsing(fn ($state) => 'IDR ' . number_format((float) $trim($state), 2, ',', '.')),
+                                        TextInput::make('odoo_service_type')->label('Service Type')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('partner_name')->label('Partner Name')->disabled()->columnSpanFull()->formatStateUsing($trim),
+                                        TextInput::make('partner_email')->label('Partner Email')->disabled()->columnSpanFull()->formatStateUsing($trim),
+                                        TextInput::make('street')->label('Street')->disabled()->columnSpanFull()->formatStateUsing($trim),
+                                        TextInput::make('blok')->label('Block')->disabled()->formatStateUsing($trim),
+                                        TextInput::make('number')->label('Number')->disabled()->formatStateUsing($trim),
                                         TextInput::make('odoo_active')
                                             ->label('Odoo Active')
                                             ->disabled()
-                                            ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                                            ->formatStateUsing(fn ($state) => $trim($state) ? 'Yes' : 'No')
                                             ->columnSpanFull(),
                                     ]),
                             ])
@@ -87,7 +88,7 @@ class ViewPortalC3 extends ViewRecord
                     ->description('Billing and transaction details.')
                     ->collapsible()
                     ->schema(
-                        function () {
+                        function () use ($trim) {
                             $ensureArray = function ($data) {
                                 if (is_array($data)) {
                                     return $data;
@@ -133,7 +134,7 @@ class ViewPortalC3 extends ViewRecord
                             }
 
                             return collect(range(0, $maxSections - 1))->map(
-                                function ($index) use ($billingNumbers, $billingDates, $netValues,$dppValues, $ppnValues, $totalBills) {
+                                function ($index) use ($billingNumbers, $billingDates, $netValues, $dppValues, $ppnValues, $totalBills, $trim) {
                                     $monthYear = date('F - Y', strtotime($billingDates[$index] ?? 'now'));
                                     return Section::make("Billing $monthYear")
                                         ->collapsible()
@@ -148,31 +149,31 @@ class ViewPortalC3 extends ViewRecord
                                                     TextInput::make("dbillhdates.{$index}")
                                                         ->label('Billing Date')
                                                         ->disabled()
-                                                        ->formatStateUsing(fn () => $billingDates[$index] ?? 'N/A'),
+                                                        ->formatStateUsing(fn () => $trim($billingDates[$index] ?? 'N/A')),
 
                                                     TextInput::make("fbillhnettvalues.{$index}")
                                                         ->label('Net Value')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->formatStateUsing(fn () => number_format($netValues[$index] ?? 0, 2, ',', '.')),
+                                                        ->formatStateUsing(fn () => number_format((float) $trim($netValues[$index] ?? 0), 2, ',', '.')),
 
                                                     TextInput::make("fbillhdpps.{$index}")
                                                         ->label('DPP')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->formatStateUsing(fn () => number_format($dppValues[$index] ?? 0, 2, ',', '.')),
+                                                        ->formatStateUsing(fn () => number_format((float) $trim($dppValues[$index] ?? 0), 2, ',', '.')),
 
                                                     TextInput::make("fbillhppns.{$index}")
                                                         ->label('PPN')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->formatStateUsing(fn () => number_format($ppnValues[$index] ?? 0, 2, ',', '.')),
+                                                        ->formatStateUsing(fn () => number_format((float) $trim($ppnValues[$index] ?? 0), 2, ',', '.')),
 
                                                     TextInput::make("fbillhtotals.{$index}")
                                                         ->label('Total Bill')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->formatStateUsing(fn () => number_format($totalBills[$index] ?? 0, 2, ',', '.')),
+                                                        ->formatStateUsing(fn () => number_format((float) $trim($totalBills[$index] ?? 0), 2, ',', '.')),
                                                 ]),
                                         ]);
                                 }
