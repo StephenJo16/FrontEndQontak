@@ -127,7 +127,7 @@ class ViewPortalC3 extends ViewRecord
                                     Section::make('No Billing Information')
                                     ->collapsible()
                                     ->schema([
-                                        TextInput::make('no_billing')->label('Notice')->disabled()->default('No billing data available.'),
+                                        TextInput::make('no_billing')->label('Note')->disabled()->placeholder('No billing data available.'),
                                     ])
                                 ];
                             }
