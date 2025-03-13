@@ -93,14 +93,19 @@ class ViewPortalC3 extends ViewRecord
                                 if (is_array($data)) {
                                     return $data;
                                 }
-                
-                                // If data is a JSON string, decode it
+                            
                                 if (is_string($data)) {
-                                    $data = trim($data, '{}'); // Remove curly braces if they exist
-                                    $data = str_replace('"', '', $data); // Remove double quotes
-                                    return explode(',', $data); // Convert string to array
+                                    // First attempt JSON decode
+                                    $decoded = json_decode($data, true);
+                                    if (json_last_error() === JSON_ERROR_NONE) {
+                                        return $decoded;
+                                    }
+                            
+                                    // If not JSON, attempt manual parsing for "{1,2,3}" format
+                                    $data = trim($data, '{}'); // Remove curly braces
+                                    return explode(',', $data); // Convert to array
                                 }
-                
+                            
                                 return []; // Fallback to an empty array
                             };
                 
@@ -128,10 +133,11 @@ class ViewPortalC3 extends ViewRecord
                                         ->schema([
                                             Grid::make(5)
                                                 ->schema([
-                                                    TextInput::make("cbillhnumbers")
-                                                        ->label('Bill Number')
-                                                        ->disabled()
-                                                        ->default($billingNumbers[$index] ?? 'N/A'),
+                                                    TextInput::make("cbillhnumbers.{$index}")
+                                                    ->label('Bill Number')
+                                                    ->disabled()
+                                                    ->formatStateUsing(fn () => $billingNumbers[$index] ?? 'N/A'),
+                                                    //->formatStateUsing(fn ($state) => dd($state)), // Debugging: Dump and Die
                 
                                                     TextInput::make("dbillhdates.{$index}")
                                                         ->label('Billing Date')
