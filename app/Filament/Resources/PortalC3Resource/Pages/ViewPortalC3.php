@@ -88,80 +88,81 @@ class ViewPortalC3 extends ViewRecord
                     ->collapsible()
                     ->schema(
                         function () {
-                            // Helper function to ensure data is an array
                             $ensureArray = function ($data) {
                                 if (is_array($data)) {
                                     return $data;
                                 }
-                            
+
                                 if (is_string($data)) {
-                                    // First attempt JSON decode
                                     $decoded = json_decode($data, true);
                                     if (json_last_error() === JSON_ERROR_NONE) {
                                         return $decoded;
                                     }
-                            
-                                    // If not JSON, attempt manual parsing for "{1,2,3}" format
-                                    $data = trim($data, '{}'); // Remove curly braces
-                                    return explode(',', $data); // Convert to array
+
+                                    $data = trim($data, '{}');
+                                    return explode(',', $data);
                                 }
-                            
-                                return []; // Fallback to an empty array
+
+                                return [];
                             };
-                
-                            // Retrieve and ensure values are arrays
+
                             $billingNumbers = $ensureArray(data_get($this->record, 'cbillhnumbers'));
                             $billingDates = $ensureArray(data_get($this->record, 'dbillhdates'));
-                            //$vaNumbers = $ensureArray(data_get($this->record, 'ccust2vanumber'));
                             $netValues = $ensureArray(data_get($this->record, 'fbillhnettvalues'));
+                            $dppValues = $ensureArray(data_get($this->record, 'fbillhdpps'));
+                            $ppnValues = $ensureArray(data_get($this->record, 'fbillhppns'));
                             $totalBills = $ensureArray(data_get($this->record, 'fbillhtotals'));
-                
-                            // Determine the number of sections
+
                             $maxSections = max(
                                 count($billingNumbers),
                                 count($billingDates),
-                                //count($vaNumbers),
                                 count($netValues),
+                                count($dppValues),
+                                count($ppnValues),
                                 count($totalBills)
                             );
-                
-                            // Generate sections dynamically
+
                             return collect(range(0, $maxSections - 1))->map(
-                                function ($index) use ($billingNumbers, $billingDates, $netValues, $totalBills) {
-                                    return Section::make("Billing " . ($index + 1))
+                                function ($index) use ($billingNumbers, $billingDates, $netValues,$dppValues, $ppnValues, $totalBills) {
+                                    $monthYear = date('F - Y', strtotime($billingDates[$index] ?? 'now'));
+                                    return Section::make("Billing $monthYear")
                                         ->collapsible()
                                         ->schema([
-                                            Grid::make(5)
+                                            Grid::make(6)
                                                 ->schema([
                                                     TextInput::make("cbillhnumbers.{$index}")
-                                                    ->label('Bill Number')
-                                                    ->disabled()
-                                                    ->formatStateUsing(fn () => $billingNumbers[$index] ?? 'N/A'),
-                                                    //->formatStateUsing(fn ($state) => dd($state)), // Debugging: Dump and Die
-                
+                                                        ->label('Bill Number')
+                                                        ->disabled()
+                                                        ->formatStateUsing(fn () => trim($billingNumbers[$index] ?? 'N/A', ' "')),
+
                                                     TextInput::make("dbillhdates.{$index}")
                                                         ->label('Billing Date')
                                                         ->disabled()
-                                                        ->default($billingDates[$index] ?? 'N/A'),
-                
-                                                    //TextInput::make("ccust2vanumber.{$index}")
-                                                    //    ->label('VA Number')
-                                                    //    ->disabled()
-                                                    //    ->default($vaNumbers[$index] ?? 'N/A'),
-                
+                                                        ->formatStateUsing(fn () => $billingDates[$index] ?? 'N/A'),
+
                                                     TextInput::make("fbillhnettvalues.{$index}")
                                                         ->label('Net Value')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->default($netValues[$index] ?? 0)
-                                                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
-                
+                                                        ->formatStateUsing(fn () => number_format($netValues[$index] ?? 0, 2, ',', '.')),
+
+                                                    TextInput::make("fbillhdpps.{$index}")
+                                                        ->label('DPP')
+                                                        ->prefix('IDR ')
+                                                        ->disabled()
+                                                        ->formatStateUsing(fn () => number_format($dppValues[$index] ?? 0, 2, ',', '.')),
+
+                                                    TextInput::make("fbillhppns.{$index}")
+                                                        ->label('PPN')
+                                                        ->prefix('IDR ')
+                                                        ->disabled()
+                                                        ->formatStateUsing(fn () => number_format($ppnValues[$index] ?? 0, 2, ',', '.')),
+
                                                     TextInput::make("fbillhtotals.{$index}")
                                                         ->label('Total Bill')
                                                         ->prefix('IDR ')
                                                         ->disabled()
-                                                        ->default($totalBills[$index] ?? 0)
-                                                        ->formatStateUsing(fn ($state) => number_format($state, 2, ',', '.')),
+                                                        ->formatStateUsing(fn () => number_format($totalBills[$index] ?? 0, 2, ',', '.')),
                                                 ]),
                                         ]);
                                 }
