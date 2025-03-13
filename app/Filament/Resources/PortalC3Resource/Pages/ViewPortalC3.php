@@ -83,7 +83,7 @@ class ViewPortalC3 extends ViewRecord
                             ->columnSpan(1),
                     ]),
 
-                    Section::make('Billing Information')
+                Section::make('Billing Information')
                     ->description('Billing and transaction details.')
                     ->collapsible()
                     ->schema(
@@ -121,6 +121,16 @@ class ViewPortalC3 extends ViewRecord
                                 count($ppnValues),
                                 count($totalBills)
                             );
+
+                            if ($maxSections === 0) {
+                                return [
+                                    Section::make('No Billing Information')
+                                    ->collapsible()
+                                    ->schema([
+                                        TextInput::make('no_billing')->label('Notice')->disabled()->default('No billing data available.'),
+                                    ])
+                                ];
+                            }
 
                             return collect(range(0, $maxSections - 1))->map(
                                 function ($index) use ($billingNumbers, $billingDates, $netValues,$dppValues, $ppnValues, $totalBills) {
